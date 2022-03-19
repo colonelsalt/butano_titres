@@ -11,63 +11,63 @@
 #include "bn_sprite_items_t_tetramino.h"
 #include "bn_sprite_items_z_tetramino.h"
 
-static constexpr bn::array<bool, num_tetramino_cells> i_tetramino_grid =
-{
-    0, 0, 0, 0,
-    1, 1, 1, 1,
-    0, 0, 0, 0,
-    0, 0, 0, 0
-};
+static constexpr bn::array<bn::array<bool, 4>, 4> i_tetramino_grid =
+{{
+    { 0, 0, 0, 0 },
+    { 1, 1, 1, 1 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 }
+}};
 
-static constexpr bn::array<bool, num_tetramino_cells> o_tetramino_grid =
-{
-    0, 0, 0, 0,
-    0, 1, 1, 0,
-    0, 1, 1, 0,
-    0, 0, 0, 0
-};
+static constexpr bn::array<bn::array<bool, 4>, 4> o_tetramino_grid =
+{{
+    { 0, 0, 0, 0 },
+    { 0, 1, 1, 0 },
+    { 0, 1, 1, 0 },
+    { 0, 0, 0, 0 }
+}};
 
-static constexpr bn::array<bool, num_tetramino_cells> j_tetramino_grid =
-{
-    0, 1, 0, 0,
-    0, 1, 1, 1,
-    0, 0, 0, 0,
-    0, 0, 0, 0
-};
+static constexpr bn::array<bn::array<bool, 4>, 4> j_tetramino_grid =
+{{
+    { 0, 1, 0, 0 },
+    { 0, 1, 1, 1 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 }
+}};
 
-static constexpr bn::array<bool, num_tetramino_cells> l_tetramino_grid =
-{
-    0, 0, 0, 1,
-    0, 1, 1, 1,
-    0, 0, 0, 0,
-    0, 0, 0, 0
-};
+static constexpr bn::array<bn::array<bool, 4>, 4> l_tetramino_grid =
+{{
+    { 0, 0, 0, 1 },
+    { 0, 1, 1, 1 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 }
+}};
 
-static constexpr bn::array<bool, num_tetramino_cells> s_tetramino_grid =
-{
-    0, 0, 1, 1,
-    0, 1, 1, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0
-};
+static constexpr bn::array<bn::array<bool, 4>, 4> s_tetramino_grid =
+{{
+    { 0, 0, 1, 1 },
+    { 0, 1, 1, 0 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 }
+}};
 
-static constexpr bn::array<bool, num_tetramino_cells> t_tetramino_grid =
-{
-    0, 0, 1, 0,
-    0, 1, 1, 1,
-    0, 0, 0, 0,
-    0, 0, 0, 0
-};
+static constexpr bn::array<bn::array<bool, 4>, 4> t_tetramino_grid =
+{{
+    { 0, 0, 1, 0 },
+    { 0, 1, 1, 1 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 }
+}};
 
-static constexpr bn::array<bool, num_tetramino_cells> z_tetramino_grid =
-{
-    0, 1, 1, 0,
-    0, 0, 1, 1,
-    0, 0, 0, 0,
-    0, 0, 0, 0
-};
+static constexpr bn::array<bn::array<bool, 4>, 4> z_tetramino_grid =
+{{
+    { 0, 1, 1, 0 },
+    { 0, 0, 1, 1 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 }
+}};
 
-static constexpr bn::array<bn::array<bool, num_tetramino_cells>, num_tetraminos> collision_grids =
+static constexpr bn::array<bn::array<bn::array<bool, 4>, 4>, num_tetraminos> collision_grids =
 {
     i_tetramino_grid,
     j_tetramino_grid,
@@ -98,6 +98,6 @@ Tetramino spawn_next()
 {
     int index = random.get_int(num_tetraminos);
     bn::sprite_ptr sprite = tetramino_sprite_items[index].create_sprite(0, spawn_y);
-    bn::array<bool, num_tetramino_cells> collision_grid = collision_grids[index];
+    bn::array<bn::array<bool, 4>, 4> collision_grid = collision_grids[index];
     return Tetramino(sprite, collision_grid);
 }
