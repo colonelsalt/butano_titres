@@ -17,5 +17,6 @@ int main()
     while(true)
     {
         bn::core::update();
+        active_tetramino.update();
     }
 }
