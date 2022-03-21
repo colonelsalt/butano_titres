@@ -2,7 +2,6 @@
 
 #include "Tetramino.h"
 
-
 static constexpr int num_tetraminos = 7;
 
 static constexpr int i_index = 1;

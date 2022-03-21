@@ -11,7 +11,7 @@
 #include "bn_sprite_items_t_tetramino.h"
 #include "bn_sprite_items_z_tetramino.h"
 
-static constexpr bn::array<bn::array<bool, 4>, 4> i_tetramino_grid =
+static constexpr t_col_grid i_tetramino_grid =
 {{
     { 0, 0, 0, 0 },
     { 1, 1, 1, 1 },
@@ -19,7 +19,7 @@ static constexpr bn::array<bn::array<bool, 4>, 4> i_tetramino_grid =
     { 0, 0, 0, 0 }
 }};
 
-static constexpr bn::array<bn::array<bool, 4>, 4> o_tetramino_grid =
+static constexpr t_col_grid o_tetramino_grid =
 {{
     { 0, 0, 0, 0 },
     { 0, 1, 1, 0 },
@@ -27,7 +27,7 @@ static constexpr bn::array<bn::array<bool, 4>, 4> o_tetramino_grid =
     { 0, 0, 0, 0 }
 }};
 
-static constexpr bn::array<bn::array<bool, 4>, 4> j_tetramino_grid =
+static constexpr t_col_grid j_tetramino_grid =
 {{
     { 0, 1, 0, 0 },
     { 0, 1, 1, 1 },
@@ -35,7 +35,7 @@ static constexpr bn::array<bn::array<bool, 4>, 4> j_tetramino_grid =
     { 0, 0, 0, 0 }
 }};
 
-static constexpr bn::array<bn::array<bool, 4>, 4> l_tetramino_grid =
+static constexpr t_col_grid l_tetramino_grid =
 {{
     { 0, 0, 0, 1 },
     { 0, 1, 1, 1 },
@@ -43,7 +43,7 @@ static constexpr bn::array<bn::array<bool, 4>, 4> l_tetramino_grid =
     { 0, 0, 0, 0 }
 }};
 
-static constexpr bn::array<bn::array<bool, 4>, 4> s_tetramino_grid =
+static constexpr t_col_grid s_tetramino_grid =
 {{
     { 0, 0, 1, 1 },
     { 0, 1, 1, 0 },
@@ -51,15 +51,15 @@ static constexpr bn::array<bn::array<bool, 4>, 4> s_tetramino_grid =
     { 0, 0, 0, 0 }
 }};
 
-static constexpr bn::array<bn::array<bool, 4>, 4> t_tetramino_grid =
+static constexpr t_col_grid t_tetramino_grid =
 {{
-    { 0, 0, 1, 0 },
-    { 0, 1, 1, 1 },
+    { 0, 1, 0, 0 },
+    { 1, 1, 1, 0 },
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 }
 }};
 
-static constexpr bn::array<bn::array<bool, 4>, 4> z_tetramino_grid =
+static constexpr t_col_grid z_tetramino_grid =
 {{
     { 0, 1, 1, 0 },
     { 0, 0, 1, 1 },
@@ -67,7 +67,7 @@ static constexpr bn::array<bn::array<bool, 4>, 4> z_tetramino_grid =
     { 0, 0, 0, 0 }
 }};
 
-static constexpr bn::array<bn::array<bn::array<bool, 4>, 4>, num_tetraminos> collision_grids =
+static constexpr bn::array<t_col_grid, num_tetraminos> collision_grids =
 {
     i_tetramino_grid,
     j_tetramino_grid,
