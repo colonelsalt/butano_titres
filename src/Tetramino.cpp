@@ -6,6 +6,7 @@
 #include <bn_fixed_point.h>
 #include <bn_keypad.h>
 #include "Grid.h"
+#include "Util.h"
 
 Tetramino::Tetramino(bn::sprite_ptr sprite, const bn::array<bn::array<bool, 4>, 4> collision_grid) : 
     _sprite(sprite), _collision_grid(collision_grid), _size(sprite.dimensions().width() / 8, sprite.dimensions().height() / 8)
@@ -77,19 +78,13 @@ void Tetramino::move_left()
 
 void Tetramino::rotate_clockwise()
 {
-    // Rotate collision grid
-    for (int i = 0; i < 2; i++)
-    {
-        for (int j = i; j < 4 - i - 1; j++)
-        {
-            bool temp = _collision_grid[i][j];
-            _collision_grid[i][j] = _collision_grid[4 - 1 - j][i];
-            _collision_grid[4 - 1 - j][i] = _collision_grid[4 - 1 - i][4 - 1 - j]; 
-            _collision_grid[4 - 1 - i][4 - 1 - j] = _collision_grid[j][4 - 1 - i]; 
-            _collision_grid[j][4 - 1 - i] = temp; 
-        }
-    }
+    t_col_grid new_rot_grid;
+    copy_col_grid(_collision_grid, new_rot_grid);
+    rotate_col_grid_90(new_rot_grid);
+    if (did_collide(_grid_pos, new_rot_grid))
+        return;
 
+    copy_col_grid(new_rot_grid, _collision_grid);
     int new_angle = (_sprite.value().rotation_angle() + 270).integer() % 360;
 
     _sprite.value().set_rotation_angle(new_angle);
