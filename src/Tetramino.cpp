@@ -8,8 +8,9 @@
 #include "Grid.h"
 #include "Util.h"
 
-Tetramino::Tetramino(bn::sprite_ptr sprite, const bn::array<bn::array<bool, 4>, 4> collision_grid) : 
-    _sprite(sprite), _collision_grid(collision_grid), _size(sprite.dimensions().width() / 8, sprite.dimensions().height() / 8)
+Tetramino::Tetramino(bn::sprite_ptr sprite, t_col_grid collision_grid, int index) : 
+    _sprite(sprite), _collision_grid(collision_grid), _index(index),
+    _size(sprite.dimensions().width() / 8, sprite.dimensions().height() / 8)
 {
     _grid_pos = bn::point(3, 0);
     _num_ticks_between_moves = 100;
@@ -65,6 +66,7 @@ void Tetramino::move_down()
     if (did_collide(bn::point(_grid_pos.x(), _grid_pos.y() + 1), _collision_grid))
     {
         _has_collided = true;
+        //BN_LOG("Tetramino collided; index: ", _index);
     }
     else
     {
@@ -105,4 +107,19 @@ void Tetramino::rotate_clockwise()
 bool Tetramino::has_collided()
 {
     return _has_collided;
+}
+
+t_col_grid Tetramino::collision_grid()
+{
+    return _collision_grid;
+}
+
+int Tetramino::index()
+{
+    return _index;
+}
+
+bn::point Tetramino::grid_pos()
+{
+    return _grid_pos;
 }

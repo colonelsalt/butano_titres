@@ -4,6 +4,7 @@
 #include <bn_array.h>
 #include <bn_random.h>
 #include <bn_fixed.h>
+#include <bn_log.h>
 #include "bn_sprite_items_i_tetramino.h"
 #include "bn_sprite_items_j_tetramino.h"
 #include "bn_sprite_items_l_tetramino.h"
@@ -30,41 +31,41 @@ static constexpr t_col_grid o_tetramino_grid =
 
 static constexpr t_col_grid j_tetramino_grid =
 {{
-    { 0, 1, 0, 0 },
-    { 0, 1, 1, 1 },
     { 0, 0, 0, 0 },
+    { 1, 0, 0, 0 },
+    { 1, 1, 1, 0 },
     { 0, 0, 0, 0 }
 }};
 
 static constexpr t_col_grid l_tetramino_grid =
 {{
-    { 0, 0, 0, 1 },
-    { 0, 1, 1, 1 },
     { 0, 0, 0, 0 },
+    { 0, 0, 1, 0 },
+    { 1, 1, 1, 0 },
     { 0, 0, 0, 0 }
 }};
 
 static constexpr t_col_grid s_tetramino_grid =
 {{
-    { 0, 0, 1, 1 },
-    { 0, 1, 1, 0 },
     { 0, 0, 0, 0 },
+    { 0, 1, 1, 0 },
+    { 1, 1, 0, 0 },
     { 0, 0, 0, 0 }
 }};
 
 static constexpr t_col_grid t_tetramino_grid =
 {{
+    { 0, 0, 0, 0 },
     { 0, 1, 0, 0 },
     { 1, 1, 1, 0 },
-    { 0, 0, 0, 0 },
     { 0, 0, 0, 0 }
 }};
 
 static constexpr t_col_grid z_tetramino_grid =
 {{
-    { 0, 1, 1, 0 },
-    { 0, 0, 1, 1 },
     { 0, 0, 0, 0 },
+    { 1, 1, 0, 0 },
+    { 0, 1, 1, 0 },
     { 0, 0, 0, 0 }
 }};
 
@@ -93,7 +94,7 @@ const bn::sprite_item tetramino_sprite_items[num_tetraminos] =
 };
 
 constexpr int turns_between_shuffles = 7;
-constexpr bn::fixed spawn_y = (-bn::display::height() / 2) + 16;
+constexpr bn::fixed spawn_y = (-bn::display::height() / 2) + 8;
 
 bn::random random = bn::random();
 int curr_turn = 0;
@@ -105,6 +106,7 @@ void shuffle_bag(bn::array<int, num_tetraminos>& bag)
     {
         int random_index = (random.get_fixed(1) * curr_index).floor_integer();
         curr_index--;
+        //BN_LOG("Random index: ", random_index);
 
         int temp = bag[curr_index];
         bag[curr_index] = bag[random_index];
@@ -122,6 +124,6 @@ Tetramino spawn_next()
     bn::sprite_ptr sprite = tetramino_sprite_items[index].create_sprite(0, spawn_y);
     t_col_grid collision_grid = collision_grids[index];
     
-    curr_turn++;
-    return Tetramino(sprite, collision_grid);
+    curr_turn = (curr_turn + 1) % turns_between_shuffles;
+    return Tetramino(sprite, collision_grid, index);
 }
