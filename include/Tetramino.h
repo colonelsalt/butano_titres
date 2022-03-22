@@ -21,7 +21,10 @@ class Tetramino
         int _tick_count;
         const bn::size _size;
         bool _has_collided;
+        int _input_repeat_rate;
+        int _input_repeat_count;
 
+        void handle_input();
         void rotate_clockwise();
         void move_down();
         void move_right();
