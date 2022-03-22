@@ -16,7 +16,7 @@ Tetramino::Tetramino(bn::sprite_ptr sprite, t_col_grid collision_grid, int index
     _num_ticks_between_moves = 100;
     _tick_count = 0;
     _has_collided = false;
-    _input_repeat_rate = 3;
+    _input_repeat_rate = 6;
     _input_repeat_count = 0;
 }
 
@@ -34,22 +34,26 @@ void Tetramino::update()
 
 void Tetramino::handle_input()
 {
+    if (_has_collided)
+        return;
+    
     if (bn::keypad::a_pressed())
         rotate_clockwise();
     
-    if (bn::keypad::left_pressed() || bn::keypad::right_pressed())
+    if (bn::keypad::left_pressed() || bn::keypad::right_pressed() || bn::keypad::down_pressed())
         _input_repeat_count = 0;
     
-    if (bn::keypad::left_held())
+    if (bn::keypad::left_held() || bn::keypad::right_held() || bn::keypad::down_held())
     {
         if (_input_repeat_count == 0)
-            move_left();
-        _input_repeat_count = (_input_repeat_count + 1) % _input_repeat_rate;
-    }
-    else if (bn::keypad::right_held())
-    {
-        if (_input_repeat_count == 0)
-            move_right();
+        {
+            if (bn::keypad::left_held())
+                move_left();
+            if (bn::keypad::right_held())
+                move_right();
+            if (bn::keypad::down_held())
+                move_down();
+        }
         _input_repeat_count = (_input_repeat_count + 1) % _input_repeat_rate;
     }
 }
