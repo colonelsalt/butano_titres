@@ -98,6 +98,6 @@ Tetramino spawn_next()
 {
     int index = random.get_int(num_tetraminos);
     bn::sprite_ptr sprite = tetramino_sprite_items[index].create_sprite(0, spawn_y);
-    bn::array<bn::array<bool, 4>, 4> collision_grid = collision_grids[index];
+    t_col_grid collision_grid = collision_grids[index];
     return Tetramino(sprite, collision_grid);
 }

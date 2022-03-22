@@ -13,6 +13,7 @@ Tetramino::Tetramino(bn::sprite_ptr sprite, const bn::array<bn::array<bool, 4>, 
     _grid_pos = bn::point(3, 0);
     _num_ticks_between_moves = 100;
     _tick_count = 0;
+    _has_collided = false;
 }
 
 void Tetramino::update()
@@ -48,12 +49,19 @@ bn::fixed_point Tetramino::grid_to_sprite_pos(bn::point grid_pos)
 
 void Tetramino::move_down()
 {
-    _grid_pos.set_y(_grid_pos.y() + 1);
+    if (did_collide(bn::point(_grid_pos.x(), _grid_pos.y() + 1), _collision_grid))
+    {
+        _has_collided = true;
+    }
+    else
+    {
+        _grid_pos.set_y(_grid_pos.y() + 1);
+    }
 }
 
 void Tetramino::move_right()
 {
-    if (!did_collide_with_right_wall(_grid_pos, _collision_grid))
+    if (!did_collide(bn::point(_grid_pos.x() + 1, _grid_pos.y()), _collision_grid))
     {
         _grid_pos.set_x(_grid_pos.x() + 1);
     }
@@ -61,7 +69,7 @@ void Tetramino::move_right()
 
 void Tetramino::move_left()
 {
-    if (!did_collide_with_left_wall(_grid_pos, _collision_grid))
+    if (!did_collide(bn::point(_grid_pos.x() - 1, _grid_pos.y()), _collision_grid))
     {
         _grid_pos.set_x(_grid_pos.x() - 1);
     }
@@ -85,4 +93,9 @@ void Tetramino::rotate_clockwise()
     int new_angle = (_sprite.value().rotation_angle() + 270).integer() % 360;
 
     _sprite.value().set_rotation_angle(new_angle);
+}
+
+bool Tetramino::has_collided()
+{
+    return _has_collided;
 }

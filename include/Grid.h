@@ -10,5 +10,6 @@ class Grid
 
 };
 
-bool did_collide_with_left_wall(bn::point pos, t_col_grid col_grid);
-bool did_collide_with_right_wall(bn::point pos, t_col_grid col_grid);
+bool did_collide(bn::point pos, t_col_grid col_grid);
+
+void add_to_grid(Tetramino& tetramino);

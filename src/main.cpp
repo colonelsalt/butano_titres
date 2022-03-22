@@ -5,7 +5,7 @@
 #include "bn_regular_bg_items_bg_grid.h"
 #include <bn_log.h>
 #include "RandomBag.h"
-
+#include "Grid.h"
 
 int main()
 {
@@ -18,5 +18,9 @@ int main()
     {
         bn::core::update();
         active_tetramino.update();
+        if (active_tetramino.has_collided())
+        {
+            //add_to_grid(active_tetramino);
+        }
     }
 }

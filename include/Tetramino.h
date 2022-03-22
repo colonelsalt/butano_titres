@@ -20,6 +20,7 @@ class Tetramino
         int _num_ticks_between_moves;
         int _tick_count;
         const bn::size _size;
+        bool _has_collided;
 
         void rotate_clockwise();
         void move_down();
@@ -30,5 +31,6 @@ class Tetramino
     public:
         Tetramino(bn::sprite_ptr sprite, const t_col_grid collision_grid);
         void update();
+        bool has_collided();
 
 };
