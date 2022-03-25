@@ -108,6 +108,11 @@ void Tetramino::rotate_clockwise()
     _sprite.value().set_rotation_angle(new_angle);
 }
 
+void Tetramino::hide()
+{
+    _sprite.value().set_visible(false);
+}
+
 bool Tetramino::has_collided()
 {
     return _has_collided;

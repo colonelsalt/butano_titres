@@ -35,6 +35,7 @@ class Tetramino
     public:
         Tetramino(bn::sprite_ptr sprite, t_col_grid collision_grid, int index);
         void update();
+        void hide();
         bool has_collided();
         t_col_grid collision_grid();
         int index();
