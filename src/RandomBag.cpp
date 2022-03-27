@@ -224,6 +224,8 @@ constexpr bn::fixed spawn_y = (-bn::display::height() / 2) + 8;
 bn::unique_ptr<DynamicBG> tetramino_bg;
 bn::unique_ptr<DynamicBG> ghost_piece_bg;
 
+bn::optional<bn::sprite_ptr> preview_sprite;
+
 bn::random random = bn::random();
 int curr_turn = 0;
 
@@ -249,14 +251,16 @@ void init_bgs()
 
 Tetramino spawn_next()
 {
+    int index = tetramino_index_bag[curr_turn];
+    bn::array<t_col_grid, 4> col_grids = collision_grids[index];
+    curr_turn = (curr_turn + 1) % turns_between_shuffles;
+
     if (curr_turn == 0)
     {
         shuffle_bag(tetramino_index_bag);
     }
-    int index = tetramino_index_bag[curr_turn];
-    bn::sprite_ptr sprite = tetramino_sprite_items[index].create_sprite(0, spawn_y);
-    bn::array<t_col_grid, 4> col_grids = collision_grids[index];
-    
-    curr_turn = (curr_turn + 1) % turns_between_shuffles;
+    int next_turn_index = tetramino_index_bag[curr_turn];
+    preview_sprite = tetramino_sprite_items[next_turn_index].create_sprite(80, -60);
+
     return Tetramino(col_grids, tetramino_bg.get(), ghost_piece_bg.get(), index);
 }
