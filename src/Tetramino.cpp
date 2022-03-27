@@ -9,9 +9,10 @@
 #include "Util.h"
 
 Tetramino::Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetramino_bg,
-                        DynamicBG* ghost_piece_bg, int tile_index) : 
+                    DynamicBG* ghost_piece_bg, t_wall_kick_list wall_kicks_list, int tile_index) : 
     _col_grids(collision_grids), _active_col_grid(collision_grids[0]), _tile_index(tile_index),
-    _rotation_index(0), _grid_pos(3, 0), _ghost_piece(ghost_piece_bg, tile_index), _bg(tetramino_bg)
+    _rotation_index(0), _grid_pos(3, 0), _ghost_piece(ghost_piece_bg, tile_index), _wall_kicks_list(wall_kicks_list),
+    _bg(tetramino_bg)
 {
     _num_ticks_between_moves = 100;
     _tick_count = 0;
@@ -117,9 +118,28 @@ void Tetramino::hard_drop()
 void Tetramino::rotate_clockwise()
 {
     int new_rot_index = (_rotation_index + 1) % 4;
+    
+    bool valid_rotation = true;
     if (did_collide(_grid_pos, _col_grids[new_rot_index]))
+    {
+        valid_rotation = false;
+        bn::array<bn::point, 4> wall_kicks = _wall_kicks_list[new_rot_index];
+        for (int i = 0; i < 4; i++)
+        {
+            if (wall_kicks[i].x() == -69)
+                break;
+            bn::point new_pos = _grid_pos + wall_kicks[i];
+            if (!did_collide(new_pos, _col_grids[new_rot_index]))
+            {
+                valid_rotation = true;
+                _grid_pos = new_pos;
+                break;
+            }
+        }
+    }
+    if (!valid_rotation)
         return;
-
+        
     _active_col_grid = _col_grids[new_rot_index];
     _rotation_index = new_rot_index;
     _ghost_piece.update_pos(_grid_pos, _active_col_grid);

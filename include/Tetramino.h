@@ -14,6 +14,7 @@ class Tetramino
     private:
         t_col_grid _active_col_grid;
         bn::array<t_col_grid, 4> _col_grids;
+        t_wall_kick_list _wall_kicks_list;
         DynamicBG* _bg;
 
         GhostPiece _ghost_piece;
@@ -38,7 +39,8 @@ class Tetramino
         bn::fixed_point grid_to_sprite_pos(bn::point grid_pos);
 
     public:
-        Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetramino_bg, DynamicBG* ghost_piece_bg, int tile_index);
+        Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetramino_bg, DynamicBG* ghost_piece_bg,
+                t_wall_kick_list wall_kicks_list, int tile_index);
         void update();
         void hide();
         bool has_collided();

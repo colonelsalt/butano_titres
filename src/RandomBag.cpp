@@ -12,6 +12,7 @@
 #include "bn_sprite_items_s_tetramino.h"
 #include "bn_sprite_items_t_tetramino.h"
 #include "bn_sprite_items_z_tetramino.h"
+#include <bn_point.h>
 
 static constexpr bn::array<t_col_grid, 4> i_tetramino_grids =
 {{
@@ -218,6 +219,48 @@ const bn::sprite_item tetramino_sprite_items[num_tetraminos] =
     bn::sprite_items::z_tetramino
 };
 
+const t_wall_kick_list standard_wall_kicks =
+{{
+    {{
+        bn::point(-1, 0), bn::point(-1, -1), bn::point(0, 2), bn::point(-1, 2)
+    }},
+    {{
+        bn::point(1, 0), bn::point(1, 1), bn::point(0, -2), bn::point(1, -2)
+    }},
+    {{
+        bn::point(1, 0), bn::point(1, -1), bn::point(0, 2), bn::point(1, 2)
+    }},
+    {{
+        bn::point(-1, 0), bn::point(-1, 1), bn::point(0, -2), bn::point(1, -2)
+    }}
+}};
+
+const t_wall_kick_list i_wall_kicks =
+{{
+    {{
+        bn::point(-2, 0), bn::point(1, 0), bn::point(-2, 1), bn::point(1, -2)
+    }},
+    {{
+        bn::point(-1, 0), bn::point(2, 0), bn::point(-1, -2), bn::point(2, -1)
+    }},
+    {{
+        bn::point(2, 0), bn::point(-1, 0), bn::point(2, -1), bn::point(-1, 2)
+    }},
+    {{
+        bn::point(1, 0), bn::point(-2, 0), bn::point(1, 2), bn::point(-2, 1)
+    }}
+}};
+
+const bn::array<bn::point, 4> dummy_o_wall_kicks =
+{
+    bn::point(-69, -69), bn::point(-69, -69), bn::point(-69, -69), bn::point(-69, -69)
+};
+
+const t_wall_kick_list o_wall_kicks =
+{
+    dummy_o_wall_kicks, dummy_o_wall_kicks, dummy_o_wall_kicks, dummy_o_wall_kicks
+};
+
 constexpr int turns_between_shuffles = 7;
 constexpr bn::fixed spawn_y = (-bn::display::height() / 2) + 8;
 
@@ -254,6 +297,13 @@ Tetramino spawn_next()
     int index = tetramino_index_bag[curr_turn];
     bn::array<t_col_grid, 4> col_grids = collision_grids[index];
     curr_turn = (curr_turn + 1) % turns_between_shuffles;
+    t_wall_kick_list wall_kicks_list;
+    if (index == i_index)
+        wall_kicks_list = i_wall_kicks;
+    else if (index == o_index)
+        wall_kicks_list = o_wall_kicks;
+    else
+        wall_kicks_list = standard_wall_kicks;
 
     if (curr_turn == 0)
     {
@@ -262,5 +312,5 @@ Tetramino spawn_next()
     int next_turn_index = tetramino_index_bag[curr_turn];
     preview_sprite = tetramino_sprite_items[next_turn_index].create_sprite(80, -60);
 
-    return Tetramino(col_grids, tetramino_bg.get(), ghost_piece_bg.get(), index);
+    return Tetramino(col_grids, tetramino_bg.get(), ghost_piece_bg.get(), wall_kicks_list, index);
 }
