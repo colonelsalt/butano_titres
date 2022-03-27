@@ -8,20 +8,24 @@
 #include "Grid.h"
 #include "Util.h"
 
-Tetramino::Tetramino(bn::sprite_ptr sprite, t_col_grid collision_grid, GhostPiece* ghost_piece, int index) : 
-    _sprite(sprite), _collision_grid(collision_grid), _ghost_piece(ghost_piece), _index(index),
-    _size(sprite.dimensions().width() / 8, sprite.dimensions().height() / 8)
+Tetramino::Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetramino_bg,
+                        DynamicBG* ghost_piece_bg, int tile_index) : 
+    _col_grids(collision_grids), _active_col_grid(collision_grids[0]), _tile_index(tile_index),
+    _rotation_index(0), _grid_pos(3, 0), _ghost_piece(ghost_piece_bg, tile_index), _bg(tetramino_bg)
 {
-    _grid_pos = bn::point(3, 0);
     _num_ticks_between_moves = 100;
     _tick_count = 0;
     _has_collided = false;
     _input_repeat_rate = 6;
     _input_repeat_count = 0;
 
-    _ghost_piece->set_colour(index + 1);
-    _ghost_piece->update_pos(_grid_pos, _collision_grid);
-    _ghost_piece->set_visible(true);
+    _bg->clear();
+    _bg->set_priority(2);
+    _bg->set_visible(true);
+
+    _ghost_piece.set_colour(tile_index + 1);
+    _ghost_piece.update_pos(_grid_pos, _active_col_grid);
+    _ghost_piece.set_visible(true);
 }
 
 void Tetramino::update()
@@ -34,8 +38,14 @@ void Tetramino::update()
         move_down();
     }
     if (_has_collided)
-        _ghost_piece->set_visible(false);
-    _sprite.value().set_position(grid_to_sprite_pos(_grid_pos));
+        _ghost_piece.set_visible(false);
+
+    _bg->clear();
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (_active_col_grid[i][j])
+                _bg->add_cell(bn::point(_grid_pos.x() + j, _grid_pos.y() + i), _tile_index + 1);
+    _bg->update();
 }
 
 void Tetramino::handle_input()
@@ -66,16 +76,9 @@ void Tetramino::handle_input()
         hard_drop();
 }
 
-bn::fixed_point Tetramino::grid_to_sprite_pos(bn::point grid_pos)
-{
-    int sprite_x = 8 * grid_pos.x() + (_sprite.value().dimensions().width() / 2) - 40;
-    int sprite_y = 8 * grid_pos.y() + (_sprite.value().dimensions().height() / 2) - 80;
-    return bn::fixed_point(sprite_x, sprite_y);
-}
-
 void Tetramino::move_down()
 {
-    if (did_collide(bn::point(_grid_pos.x(), _grid_pos.y() + 1), _collision_grid))
+    if (did_collide(bn::point(_grid_pos.x(), _grid_pos.y() + 1), _active_col_grid))
     {
         _has_collided = true;
         //BN_LOG("Tetramino collided; index: ", _index);
@@ -83,52 +86,48 @@ void Tetramino::move_down()
     else
     {
         _grid_pos.set_y(_grid_pos.y() + 1);
-        _ghost_piece->update_pos(_grid_pos, _collision_grid);
+        _ghost_piece.update_pos(_grid_pos, _active_col_grid);
     }
 }
 
 void Tetramino::move_right()
 {
-    if (!did_collide(bn::point(_grid_pos.x() + 1, _grid_pos.y()), _collision_grid))
+    if (!did_collide(bn::point(_grid_pos.x() + 1, _grid_pos.y()), _active_col_grid))
     {
         _grid_pos.set_x(_grid_pos.x() + 1);
-        _ghost_piece->update_pos(_grid_pos, _collision_grid);
+        _ghost_piece.update_pos(_grid_pos, _active_col_grid);
     }
 }
 
 void Tetramino::move_left()
 {
-    if (!did_collide(bn::point(_grid_pos.x() - 1, _grid_pos.y()), _collision_grid))
+    if (!did_collide(bn::point(_grid_pos.x() - 1, _grid_pos.y()), _active_col_grid))
     {
         _grid_pos.set_x(_grid_pos.x() - 1);
-        _ghost_piece->update_pos(_grid_pos, _collision_grid);
+        _ghost_piece.update_pos(_grid_pos, _active_col_grid);
     }
 }
 
 void Tetramino::hard_drop()
 {
-    _grid_pos = _ghost_piece->get_pos();
+    _grid_pos = _ghost_piece.get_pos();
     _has_collided = true;
 }
 
 void Tetramino::rotate_clockwise()
 {
-    t_col_grid new_rot_grid;
-    copy_col_grid(_collision_grid, new_rot_grid);
-    rotate_col_grid_90(new_rot_grid);
-    if (did_collide(_grid_pos, new_rot_grid))
+    int new_rot_index = (_rotation_index + 1) % 4;
+    if (did_collide(_grid_pos, _col_grids[new_rot_index]))
         return;
 
-    copy_col_grid(new_rot_grid, _collision_grid);
-    int new_angle = (_sprite.value().rotation_angle() + 270).integer() % 360;
-
-    _sprite.value().set_rotation_angle(new_angle);
-    _ghost_piece->update_pos(_grid_pos, _collision_grid);
+    _active_col_grid = _col_grids[new_rot_index];
+    _rotation_index = new_rot_index;
+    _ghost_piece.update_pos(_grid_pos, _active_col_grid);
 }
 
 void Tetramino::hide()
 {
-    _sprite.value().set_visible(false);
+    _bg->set_visible(false);
 }
 
 bool Tetramino::has_collided()
@@ -138,12 +137,12 @@ bool Tetramino::has_collided()
 
 t_col_grid Tetramino::collision_grid()
 {
-    return _collision_grid;
+    return _active_col_grid;
 }
 
 int Tetramino::index()
 {
-    return _index;
+    return _tile_index;
 }
 
 bn::point Tetramino::grid_pos()

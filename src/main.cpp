@@ -17,7 +17,7 @@ int main()
     int line_clear_counter = 0;
     bool is_line_clear_active = false;
 
-    init_ghost_piece();
+    init_bgs();
     Tetramino active_tetramino = spawn_next();
     bn::regular_bg_ptr bg = bn::regular_bg_items::bg_grid.create_bg(0, 0);
     reset_grid();

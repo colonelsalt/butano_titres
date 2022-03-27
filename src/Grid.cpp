@@ -4,46 +4,16 @@
 #include "bn_regular_bg_items_tetraminos.h"
 #include "bn_regular_bg_map_cell_info.h"
 #include <bn_display.h>
+#include "DynamicBG.h"
 
 bn::array<bn::array<bool, GRID_WIDTH>, GRID_HEIGHT> bg_grid; 
-bn::unique_ptr<Grid> grid_ptr;
-
-Grid::Grid() : _map_item(_bg_cells[0], bn::size(BG_LENGTH, BG_LENGTH))
-{
-    bn::regular_bg_item bg_item(bn::regular_bg_items::tetraminos.tiles_item(),
-        bn::regular_bg_items::tetraminos.palette_item(), _map_item);
-    _bg_ptr = bg_item.create_bg(88, 48);
-    _bg_map = _bg_ptr.value().map();
-
-    bn::memory::clear(BG_LENGTH * BG_LENGTH, _bg_cells[0]);
-}
-
-void Grid::update()
-{
-    _bg_map.value().reload_cells_ref();
-}
-
-void Grid::add_cell(bn::point pos, int tile_index)
-{
-    bn::regular_bg_map_cell& cell = _bg_cells[_map_item.cell_index(pos.x(), pos.y())];
-    bn::regular_bg_map_cell_info cell_info(cell);
-
-    cell_info.set_tile_index(tile_index);
-    cell = cell_info.cell();
-    update();
-}
-
-void Grid::copy_cell_from_above(bn::point pos, int offset)
-{
-    bn::regular_bg_map_cell& cell_above = _bg_cells[_map_item.cell_index(pos.x(), pos.y() - offset)];
-    bn::regular_bg_map_cell_info cell_above_info(cell_above);
-    add_cell(pos, cell_above_info.tile_index());
-}
-
+bn::unique_ptr<DynamicBG> grid_ptr;
 
 void reset_grid()
 {
-    grid_ptr = bn::unique_ptr<Grid>(new Grid());
+    grid_ptr = bn::unique_ptr<DynamicBG>(new DynamicBG());
+    grid_ptr->set_visible(true);
+    grid_ptr->set_priority(3);
     for (int i = 0; i < GRID_HEIGHT; i++)
         for (int j = 0; j < GRID_WIDTH; j++)
             bg_grid[i][j] = false;
@@ -81,12 +51,13 @@ void add_to_grid(Tetramino& tetramino)
                 int y = tetramino.grid_pos().y() + i;
                 if (x < 0 || x > GRID_WIDTH - 1 || y < 0 || y > GRID_HEIGHT - 1)
                     continue;
-                //BN_LOG("Adding cell to grid at x = ", x, ", y = ", y);
+                BN_LOG("Adding cell to grid at x = ", x, ", y = ", y, " with tile index: ", tetramino.index() + 1);
                 bg_grid[y][x] = true;
                 grid_ptr->add_cell(bn::point(x, y), tetramino.index() + 1);
             }
         }
     }
+    grid_ptr->update();
 }
 
 bn::array<int, 4> lines_cleared;
@@ -111,6 +82,7 @@ bool check_for_line_clear()
             }
         }
     }
+    grid_ptr->update();
     return cleared_rows_index > 0;
 }
 
@@ -134,7 +106,7 @@ void shift_down(int start_line, int num_lines)
             }
         }
     }
-
+    grid_ptr->update();
 }
 
 void shift_down_cleared_lines()

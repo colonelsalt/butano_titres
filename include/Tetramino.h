@@ -12,10 +12,13 @@
 class Tetramino
 {
     private:
-        bn::optional<bn::sprite_ptr> _sprite;
-        t_col_grid _collision_grid;
-        GhostPiece* _ghost_piece;
-        int _index;
+        t_col_grid _active_col_grid;
+        bn::array<t_col_grid, 4> _col_grids;
+        DynamicBG* _bg;
+
+        GhostPiece _ghost_piece;
+        int _tile_index;
+        int _rotation_index;
         
         // Position of the top left corner of this tetramino's grid in the BG grid
         bn::point _grid_pos;
@@ -35,7 +38,7 @@ class Tetramino
         bn::fixed_point grid_to_sprite_pos(bn::point grid_pos);
 
     public:
-        Tetramino(bn::sprite_ptr sprite, t_col_grid collision_grid, GhostPiece* ghost_piece, int index);
+        Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetramino_bg, DynamicBG* ghost_piece_bg, int tile_index);
         void update();
         void hide();
         bool has_collided();

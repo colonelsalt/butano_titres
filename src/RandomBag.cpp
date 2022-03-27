@@ -13,71 +13,196 @@
 #include "bn_sprite_items_t_tetramino.h"
 #include "bn_sprite_items_z_tetramino.h"
 
-static constexpr t_col_grid i_tetramino_grid =
+static constexpr bn::array<t_col_grid, 4> i_tetramino_grids =
 {{
-    { 0, 0, 0, 0 },
-    { 1, 1, 1, 1 },
-    { 0, 0, 0, 0 },
-    { 0, 0, 0, 0 }
+    {{
+        { 0, 0, 0, 0 },
+        { 1, 1, 1, 1 },
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 }
+    }},
+    {{
+        { 0, 0, 1, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 0, 1, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 1, 1, 1, 1 },
+        { 0, 0, 0, 0 }
+    }},
+    {{
+        { 0, 1, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 0, 0 }
+    }}
 }};
 
-static constexpr t_col_grid o_tetramino_grid =
+static constexpr t_col_grid o_grid =
 {{
     { 0, 0, 0, 0 },
     { 0, 1, 1, 0 },
-    { 0, 1, 1, 0 },
-    { 0, 0, 0, 0 }
-}};
-
-static constexpr t_col_grid j_tetramino_grid =
-{{
-    { 0, 0, 0, 0 },
-    { 1, 0, 0, 0 },
-    { 1, 1, 1, 0 },
-    { 0, 0, 0, 0 }
-}};
-
-static constexpr t_col_grid l_tetramino_grid =
-{{
-    { 0, 0, 0, 0 },
-    { 0, 0, 1, 0 },
-    { 1, 1, 1, 0 },
-    { 0, 0, 0, 0 }
-}};
-
-static constexpr t_col_grid s_tetramino_grid =
-{{
-    { 0, 0, 0, 0 },
-    { 0, 1, 1, 0 },
-    { 1, 1, 0, 0 },
-    { 0, 0, 0, 0 }
-}};
-
-static constexpr t_col_grid t_tetramino_grid =
-{{
-    { 0, 0, 0, 0 },
-    { 0, 1, 0, 0 },
-    { 1, 1, 1, 0 },
-    { 0, 0, 0, 0 }
-}};
-
-static constexpr t_col_grid z_tetramino_grid =
-{{
-    { 0, 0, 0, 0 },
-    { 1, 1, 0, 0 },
     { 0, 1, 1, 0 },
     { 0, 0, 0, 0 }
 }};
 
-static constexpr bn::array<t_col_grid, num_tetraminos> collision_grids =
+static constexpr bn::array<t_col_grid, 4> o_tetramino_grids =
 {
-    i_tetramino_grid,
-    j_tetramino_grid,
-    l_tetramino_grid,
-    o_tetramino_grid,
-    s_tetramino_grid,
-    t_tetramino_grid,
-    z_tetramino_grid
+    o_grid, o_grid, o_grid, o_grid   
+};
+
+static constexpr bn::array<t_col_grid, 4> j_tetramino_grids =
+{{
+    {{
+        { 0, 0, 0, 0 },
+        { 1, 0, 0, 0 },
+        { 1, 1, 1, 0 },
+        { 0, 0, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 1, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 1, 1, 1, 0 },
+        { 0, 0, 1, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 1, 1, 0, 0 }
+    }}
+}};
+
+static constexpr bn::array<t_col_grid, 4> l_tetramino_grids =
+{{
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 0, 1, 0 },
+        { 1, 1, 1, 0 },
+        { 0, 0, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 1, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 1, 1, 1, 0 },
+        { 1, 0, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 1, 1, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 0, 0 }
+    }}
+}};
+
+static constexpr bn::array<t_col_grid, 4> s_tetramino_grids =
+{{
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 1, 0 },
+        { 1, 1, 0, 0 },
+        { 0, 0, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 1, 0 },
+        { 0, 0, 1, 0 },
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 0, 1, 1, 0 },
+        { 1, 1, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 1, 0, 0, 0 },
+        { 1, 1, 0, 0 },
+        { 0, 1, 0, 0 }
+    }}
+}};
+
+static constexpr bn::array<t_col_grid, 4> t_tetramino_grids =
+{{
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 1, 1, 1, 0 },
+        { 0, 0, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 1, 1, 0 },
+        { 0, 1, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 1, 1, 1, 0 },
+        { 0, 1, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 1, 1, 0, 0 },
+        { 0, 1, 0, 0 }
+    }}
+}};
+
+static constexpr bn::array<t_col_grid, 4> z_tetramino_grids =
+{{
+    {{
+        { 0, 0, 0, 0 },
+        { 1, 1, 0, 0 },
+        { 0, 1, 1, 0 },
+        { 0, 0, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 1, 1, 0 },
+        { 0, 1, 0, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 1, 1, 0, 0 },
+        { 0, 1, 1, 0 }
+    }},
+    {{
+        { 0, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 1, 1, 0, 0 },
+        { 1, 0, 0, 0 }
+    }}
+}};
+
+static constexpr bn::array<bn::array<t_col_grid, 4>, num_tetraminos> collision_grids =
+{
+    i_tetramino_grids,
+    j_tetramino_grids,
+    l_tetramino_grids,
+    o_tetramino_grids,
+    s_tetramino_grids,
+    t_tetramino_grids,
+    z_tetramino_grids
 };
 
 static bn::array<int, num_tetraminos> tetramino_index_bag = { 0, 1, 2, 3, 4, 5, 6 };
@@ -96,7 +221,9 @@ const bn::sprite_item tetramino_sprite_items[num_tetraminos] =
 constexpr int turns_between_shuffles = 7;
 constexpr bn::fixed spawn_y = (-bn::display::height() / 2) + 8;
 
-bn::unique_ptr<GhostPiece> ghost_piece;
+bn::unique_ptr<DynamicBG> tetramino_bg;
+bn::unique_ptr<DynamicBG> ghost_piece_bg;
+
 bn::random random = bn::random();
 int curr_turn = 0;
 
@@ -107,7 +234,6 @@ void shuffle_bag(bn::array<int, num_tetraminos>& bag)
     {
         int random_index = (random.get_fixed(1) * curr_index).floor_integer();
         curr_index--;
-        //BN_LOG("Random index: ", random_index);
 
         int temp = bag[curr_index];
         bag[curr_index] = bag[random_index];
@@ -115,9 +241,10 @@ void shuffle_bag(bn::array<int, num_tetraminos>& bag)
     }
 }
 
-void init_ghost_piece()
+void init_bgs()
 {
-    ghost_piece = bn::unique_ptr<GhostPiece>(new GhostPiece());
+    tetramino_bg = bn::unique_ptr<DynamicBG>(new DynamicBG());
+    ghost_piece_bg = bn::unique_ptr<DynamicBG>(new DynamicBG());
 }
 
 Tetramino spawn_next()
@@ -128,8 +255,8 @@ Tetramino spawn_next()
     }
     int index = tetramino_index_bag[curr_turn];
     bn::sprite_ptr sprite = tetramino_sprite_items[index].create_sprite(0, spawn_y);
-    t_col_grid collision_grid = collision_grids[index];
+    bn::array<t_col_grid, 4> col_grids = collision_grids[index];
     
     curr_turn = (curr_turn + 1) % turns_between_shuffles;
-    return Tetramino(sprite, collision_grid, ghost_piece.get(), index);
+    return Tetramino(col_grids, tetramino_bg.get(), ghost_piece_bg.get(), index);
 }
