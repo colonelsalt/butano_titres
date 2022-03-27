@@ -6,14 +6,15 @@
 #include <bn_optional.h>
 #include <bn_point.h>
 #include <bn_size.h>
+#include "GhostPiece.h"
+#include "Common.h"
 
-constexpr int num_tetramino_cells = 4 * 4;
-typedef bn::array<bn::array<bool, 4>, 4> t_col_grid;
 class Tetramino
 {
     private:
         bn::optional<bn::sprite_ptr> _sprite;
         t_col_grid _collision_grid;
+        GhostPiece* _ghost_piece;
         int _index;
         
         // Position of the top left corner of this tetramino's grid in the BG grid
@@ -33,7 +34,7 @@ class Tetramino
         bn::fixed_point grid_to_sprite_pos(bn::point grid_pos);
 
     public:
-        Tetramino(bn::sprite_ptr sprite, t_col_grid collision_grid, int index);
+        Tetramino(bn::sprite_ptr sprite, t_col_grid collision_grid, GhostPiece* ghost_piece, int index);
         void update();
         void hide();
         bool has_collided();

@@ -96,6 +96,7 @@ const bn::sprite_item tetramino_sprite_items[num_tetraminos] =
 constexpr int turns_between_shuffles = 7;
 constexpr bn::fixed spawn_y = (-bn::display::height() / 2) + 8;
 
+bn::unique_ptr<GhostPiece> ghost_piece;
 bn::random random = bn::random();
 int curr_turn = 0;
 
@@ -114,6 +115,11 @@ void shuffle_bag(bn::array<int, num_tetraminos>& bag)
     }
 }
 
+void init_ghost_piece()
+{
+    ghost_piece = bn::unique_ptr<GhostPiece>(new GhostPiece());
+}
+
 Tetramino spawn_next()
 {
     if (curr_turn == 0)
@@ -125,5 +131,5 @@ Tetramino spawn_next()
     t_col_grid collision_grid = collision_grids[index];
     
     curr_turn = (curr_turn + 1) % turns_between_shuffles;
-    return Tetramino(sprite, collision_grid, index);
+    return Tetramino(sprite, collision_grid, ghost_piece.get(), index);
 }
