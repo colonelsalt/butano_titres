@@ -5,7 +5,7 @@
 #include <bn_blending.h>
 #include "Grid.h"
 
-GhostPiece::GhostPiece() : _map_item(_bg_cells[0], bn::size(BG_LENGTH, BG_LENGTH)), _tile_index(0)
+GhostPiece::GhostPiece() : _map_item(_bg_cells[0], bn::size(BG_LENGTH, BG_LENGTH)), _tile_index(0), _pos(0, 0)
 {
     bn::regular_bg_item bg_item(bn::regular_bg_items::tetraminos.tiles_item(),
         bn::regular_bg_items::tetraminos.palette_item(), _map_item);
@@ -52,9 +52,15 @@ void GhostPiece::update_pos(bn::point tetramino_pos, t_col_grid& col_grid)
         pos.set_y(pos.y() + 1);
     pos.set_y(pos.y() - 1);
     grid_to_bg(pos, col_grid);
+    _pos = pos;
 }
 
 void GhostPiece::set_visible(bool visible)
 {
     _bg_ptr.value().set_visible(visible);
+}
+
+bn::point GhostPiece::get_pos()
+{
+    return _pos;
 }

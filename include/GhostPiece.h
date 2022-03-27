@@ -13,6 +13,7 @@ class GhostPiece
         bn::optional<bn::regular_bg_ptr> _bg_ptr;
         bn::optional<bn::regular_bg_map_ptr> _bg_map;
         int _tile_index;
+        bn::point _pos;
         
         void clear_tiles();
         void add_tile(bn::point pos);
@@ -23,4 +24,5 @@ class GhostPiece
         void set_colour(int tile_index);
         void update_pos(bn::point tetramino_pos, t_col_grid& col_grid);
         void set_visible(bool visible);
+        bn::point get_pos();
 };

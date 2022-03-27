@@ -31,6 +31,7 @@ class Tetramino
         void move_down();
         void move_right();
         void move_left();
+        void hard_drop();
         bn::fixed_point grid_to_sprite_pos(bn::point grid_pos);
 
     public:

@@ -20,11 +20,12 @@ Tetramino::Tetramino(bn::sprite_ptr sprite, t_col_grid collision_grid, GhostPiec
     _input_repeat_count = 0;
 
     _ghost_piece->set_colour(index + 1);
+    _ghost_piece->update_pos(_grid_pos, _collision_grid);
+    _ghost_piece->set_visible(true);
 }
 
 void Tetramino::update()
 {
-    BN_LOG("Tetramino update, tick ", _tick_count);
     handle_input();
     _tick_count++;
     if (_tick_count >= _num_ticks_between_moves)
@@ -32,6 +33,8 @@ void Tetramino::update()
         _tick_count = 0;
         move_down();
     }
+    if (_has_collided)
+        _ghost_piece->set_visible(false);
     _sprite.value().set_position(grid_to_sprite_pos(_grid_pos));
 }
 
@@ -59,6 +62,8 @@ void Tetramino::handle_input()
         }
         _input_repeat_count = (_input_repeat_count + 1) % _input_repeat_rate;
     }
+    else if (bn::keypad::up_pressed())
+        hard_drop();
 }
 
 bn::fixed_point Tetramino::grid_to_sprite_pos(bn::point grid_pos)
@@ -98,6 +103,12 @@ void Tetramino::move_left()
         _grid_pos.set_x(_grid_pos.x() - 1);
         _ghost_piece->update_pos(_grid_pos, _collision_grid);
     }
+}
+
+void Tetramino::hard_drop()
+{
+    _grid_pos = _ghost_piece->get_pos();
+    _has_collided = true;
 }
 
 void Tetramino::rotate_clockwise()
