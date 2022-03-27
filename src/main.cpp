@@ -7,7 +7,7 @@
 #include "RandomBag.h"
 #include "Grid.h"
 
-constexpr int ticks_between_line_clears = 10;
+constexpr int ticks_between_line_clears = 30;
 
 int main()
 {

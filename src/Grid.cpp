@@ -51,7 +51,7 @@ void add_to_grid(Tetramino& tetramino)
                 int y = tetramino.grid_pos().y() + i;
                 if (x < 0 || x > GRID_WIDTH - 1 || y < 0 || y > GRID_HEIGHT - 1)
                     continue;
-                BN_LOG("Adding cell to grid at x = ", x, ", y = ", y, " with tile index: ", tetramino.index() + 1);
+                //BN_LOG("Adding cell to grid at x = ", x, ", y = ", y, " with tile index: ", tetramino.index() + 1);
                 bg_grid[y][x] = true;
                 grid_ptr->add_cell(bn::point(x, y), tetramino.index() + 1);
             }
@@ -63,7 +63,7 @@ void add_to_grid(Tetramino& tetramino)
 bn::array<int, 4> lines_cleared;
 bool check_for_line_clear()
 {
-    lines_cleared.fill(-1);
+    lines_cleared.fill(-69);
     int cleared_rows_index = 0;
     for (int i = 0; i < GRID_HEIGHT; i++)
     {
@@ -74,7 +74,7 @@ bool check_for_line_clear()
         if (line_cleared)
         {
             lines_cleared[cleared_rows_index++] = i;
-            BN_LOG("Line clear on line ", i);
+            //BN_LOG("Line clear on line ", i);
             for (int j = 0; j < GRID_WIDTH; j++)
             {
                 bg_grid[i][j] = false;
@@ -111,32 +111,31 @@ void shift_down(int start_line, int num_lines)
 
 void shift_down_cleared_lines()
 {
-    int last_line = -1;
-    int num_consecutive_lines = 0;
-    int lines_already_shifted = 0;
+    int last_line = -69;
+    int num_consecutive_lines = 1;
 
+    //BN_LOG("About to shift; lines_cleared: ", lines_cleared[0], ", ", lines_cleared[1], ", ", lines_cleared[2], ", ", lines_cleared[3]);
     for (int i = 0; i < 4; i++)
     {
-        if (lines_cleared[i] == -1)
+        if (lines_cleared[i] == -69 || lines_cleared[i] != last_line + 1)
         {
-            if (num_consecutive_lines > 0)
+            if (last_line > -69)
             {
-                shift_down(last_line + lines_already_shifted, num_consecutive_lines);
-                lines_already_shifted += num_consecutive_lines;
-                num_consecutive_lines = 0;
+                shift_down(last_line, num_consecutive_lines);
+                num_consecutive_lines = 1;
             }
         }
         else
         {
-            if (last_line == -1 || lines_cleared[i] == last_line + 1)
+            if (lines_cleared[i] == last_line + 1)
                 num_consecutive_lines++;
 
         }
         last_line = lines_cleared[i];
     }
-    if (last_line != -1)
+    if (last_line != -69)
     {
-        shift_down(last_line + lines_already_shifted, num_consecutive_lines);
+        shift_down(last_line, num_consecutive_lines);
     }
 }
 
