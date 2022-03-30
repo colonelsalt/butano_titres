@@ -5,6 +5,7 @@
 #include "bn_regular_bg_map_cell_info.h"
 #include <bn_display.h>
 #include "DynamicBG.h"
+#include "ScoreManager.h"
 
 bn::array<bn::array<bool, GRID_WIDTH>, GRID_HEIGHT> bg_grid; 
 bn::unique_ptr<DynamicBG> grid_ptr;
@@ -83,6 +84,7 @@ bool check_for_line_clear()
         }
     }
     grid_ptr->update();
+    increment_score_line_clear(cleared_rows_index);
     return cleared_rows_index > 0;
 }
 

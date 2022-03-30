@@ -7,7 +7,7 @@
 GhostPiece::GhostPiece(DynamicBG* bg, int tile_index) : _bg(bg), _tile_index(tile_index), _pos(0, 0)
 {
     _bg->clear();
-    _bg->set_alpha(0.8);
+    _bg->set_alpha(0.5);
 }
 
 void GhostPiece::grid_to_bg(bn::point start_pos, t_col_grid& col_grid)

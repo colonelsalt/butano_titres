@@ -6,6 +6,7 @@
 #include <bn_log.h>
 #include "RandomBag.h"
 #include "Grid.h"
+#include "ScoreManager.h"
 
 constexpr int ticks_between_line_clears = 30;
 
@@ -21,6 +22,7 @@ int main()
     Tetramino active_tetramino = spawn_next();
     bn::regular_bg_ptr bg = bn::regular_bg_items::bg_grid.create_bg(0, 0);
     reset_grid();
+    reset_score();
 
     while(true)
     {

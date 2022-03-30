@@ -7,6 +7,7 @@
 #include <bn_keypad.h>
 #include "Grid.h"
 #include "Util.h"
+#include "ScoreManager.h"
 
 Tetramino::Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetramino_bg,
                     DynamicBG* ghost_piece_bg, t_wall_kick_list wall_kicks_list, int tile_index) : 
@@ -19,6 +20,9 @@ Tetramino::Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetram
     _has_collided = false;
     _input_repeat_rate = 6;
     _input_repeat_count = 0;
+
+    _soft_drop_cells = 0;
+    _hard_drop_cells = 0;
 
     _bg->clear();
     _bg->set_priority(2);
@@ -36,7 +40,7 @@ void Tetramino::update()
     if (_tick_count >= _num_ticks_between_moves)
     {
         _tick_count = 0;
-        move_down();
+        move_down(false);
     }
     if (_has_collided)
         _ghost_piece.set_visible(false);
@@ -69,7 +73,7 @@ void Tetramino::handle_input()
             if (bn::keypad::right_held())
                 move_right();
             if (bn::keypad::down_held())
-                move_down();
+                move_down(true);
         }
         _input_repeat_count = (_input_repeat_count + 1) % _input_repeat_rate;
     }
@@ -77,15 +81,17 @@ void Tetramino::handle_input()
         hard_drop();
 }
 
-void Tetramino::move_down()
+void Tetramino::move_down(bool soft_drop)
 {
     if (did_collide(bn::point(_grid_pos.x(), _grid_pos.y() + 1), _active_col_grid))
     {
-        _has_collided = true;
+        commit_to_grid();
         //BN_LOG("Tetramino collided; index: ", _index);
     }
     else
     {
+        if (soft_drop)
+            _soft_drop_cells++;
         _grid_pos.set_y(_grid_pos.y() + 1);
         _ghost_piece.update_pos(_grid_pos, _active_col_grid);
     }
@@ -111,8 +117,9 @@ void Tetramino::move_left()
 
 void Tetramino::hard_drop()
 {
+    _hard_drop_cells = _ghost_piece.get_pos().y() - _grid_pos.y();
     _grid_pos = _ghost_piece.get_pos();
-    _has_collided = true;
+    commit_to_grid();
 }
 
 void Tetramino::rotate_clockwise()
@@ -143,6 +150,15 @@ void Tetramino::rotate_clockwise()
     _active_col_grid = _col_grids[new_rot_index];
     _rotation_index = new_rot_index;
     _ghost_piece.update_pos(_grid_pos, _active_col_grid);
+}
+
+void Tetramino::commit_to_grid()
+{
+    if (!_has_collided)
+    {
+        _has_collided = true;
+        increment_score_on_commit(_soft_drop_cells, _hard_drop_cells);
+    }
 }
 
 void Tetramino::hide()

@@ -20,6 +20,9 @@ class Tetramino
         GhostPiece _ghost_piece;
         int _tile_index;
         int _rotation_index;
+
+        int _soft_drop_cells;
+        int _hard_drop_cells;
         
         // Position of the top left corner of this tetramino's grid in the BG grid
         bn::point _grid_pos;
@@ -32,10 +35,11 @@ class Tetramino
 
         void handle_input();
         void rotate_clockwise();
-        void move_down();
+        void move_down(bool soft_drop);
         void move_right();
         void move_left();
         void hard_drop();
+        void commit_to_grid();
         bn::fixed_point grid_to_sprite_pos(bn::point grid_pos);
 
     public:
