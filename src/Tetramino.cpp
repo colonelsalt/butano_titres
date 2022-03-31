@@ -10,12 +10,12 @@
 #include "ScoreManager.h"
 
 Tetramino::Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetramino_bg,
-                    DynamicBG* ghost_piece_bg, t_wall_kick_list wall_kicks_list, int tile_index) : 
+                    DynamicBG* ghost_piece_bg, t_wall_kick_list wall_kicks_list, int level, int tile_index) : 
     _col_grids(collision_grids), _active_col_grid(collision_grids[0]), _tile_index(tile_index),
     _rotation_index(0), _grid_pos(3, 0), _ghost_piece(ghost_piece_bg, tile_index), _wall_kicks_list(wall_kicks_list),
     _bg(tetramino_bg)
 {
-    _num_ticks_between_moves = 100;
+    _num_ticks_between_moves = get_ticks_between_moves(level);
     _tick_count = 0;
     _has_collided = false;
     _input_repeat_rate = 6;
@@ -36,7 +36,8 @@ Tetramino::Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetram
 void Tetramino::update()
 {
     handle_input();
-    _tick_count++;
+    _tick_count += 1;
+    BN_LOG("Tick count is ", _tick_count);
     if (_tick_count >= _num_ticks_between_moves)
     {
         _tick_count = 0;

@@ -14,10 +14,12 @@ bn::sprite_text_generator dynamic_text_generator(common::variable_8x16_sprite_fo
 int level = 1;
 int score = 0;
 int lines = 0;
-constexpr bn::fixed_point score_text_pos(60, -40);
-constexpr bn::fixed_point score_number_pos(77, -20);
-constexpr bn::fixed_point level_text_pos(60, 0);
+constexpr bn::fixed_point score_text_pos(60, -30);
+constexpr bn::fixed_point score_number_pos(77, -15);
+constexpr bn::fixed_point level_text_pos(60, 5);
 constexpr bn::fixed_point level_number_pos(77, 20);
+constexpr bn::fixed_point lines_text_pos(60, 40);
+constexpr bn::fixed_point lines_number_pos(77, 55);
 
 void update_score_text()
 {
@@ -29,14 +31,18 @@ void update_score_text()
 
     bn::string level_text = bn::format<16>("{}", level);
     dynamic_text_generator.generate(level_number_pos, level_text, dynamic_text_sprites);
+
+    bn::string lines_text = bn::format<16>("{}", lines);
+    dynamic_text_generator.generate(lines_number_pos, lines_text, dynamic_text_sprites);
 }
 
-void update_level()
+void check_for_level_increase()
 {
     if (lines % 10 == 0 && lines > 0 && level < 19)
     {
         level++;
         update_score_text();
+        update_level(level);
     }
 }
 
@@ -50,11 +56,15 @@ void reset_score()
     static_text_generator.set_left_alignment();
     static_text_generator.generate(score_text_pos, "Score:", static_text_sprites);
     static_text_generator.generate(level_text_pos, "Level:", static_text_sprites);
+    static_text_generator.generate(lines_text_pos, "Lines:", static_text_sprites);
     update_score_text();
 }
 
 void increment_score_line_clear(int num_line_clears)
 {
+    if (num_line_clears == 0)
+        return;
+    
     switch (num_line_clears)
     {
     case 1:
@@ -73,7 +83,7 @@ void increment_score_line_clear(int num_line_clears)
         break;
     }
     lines += num_line_clears;
-    update_level();
+    check_for_level_increase();
     update_score_text();
 }
 

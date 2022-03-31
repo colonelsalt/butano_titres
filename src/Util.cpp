@@ -1,23 +1,48 @@
 #include "Util.h"
 
-void copy_col_grid(t_col_grid& from, t_col_grid& to)
+bn::fixed get_ticks_between_moves(int level)
 {
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            to[i][j] = from[i][j];
-}
-
-void rotate_col_grid_90(t_col_grid& grid)
-{
-    for (int i = 0; i < 2; i++)
+    switch (level)
     {
-        for (int j = i; j < 4 - i - 1; j++)
-        {
-            bool temp = grid[i][j];
-            grid[i][j] = grid[4 - 1 - j][i];
-            grid[4 - 1 - j][i] = grid[4 - 1 - i][4 - 1 - j]; 
-            grid[4 - 1 - i][4 - 1 - j] = grid[j][4 - 1 - i]; 
-            grid[j][4 - 1 - i] = temp; 
-        }
+    case 1:
+        return 1.0 / 0.01667;
+    case 2:
+        return 1.0 / 0.021017;
+    case 3:
+        return 1.0 / 0.026977;
+    case 4:
+        return 1.0 / 0.035256;
+    case 5:
+        return 1.0 / 0.04693;
+    case 6:
+        return 1.0 / 0.06361;
+    case 7:
+        return 1.0 / 0.0879;
+    case 8:
+        return 1.0 / 0.1236;
+    case 9:
+        return 1.0 / 0.1775;
+    case 10:
+        return 1.0 / 0.2598;
+    case 11:
+        return 1.0 / 0.388;
+    case 12:
+        return 1.0 / 0.59;
+    case 13:
+        return 1.0 / 0.92;
+    case 14:
+        return 1.0 / 1.46;
+    case 15:
+        return 1.0 / 2.36;
+    case 16:
+        return 1.0 / 3.91;
+    case 17:
+        return 1.0 / 6.61;
+    case 18:
+        return 1.0 / 11.43;
+    case 19:
+        return 1.0 / 20;
+    default:
+        BN_UNREACHABLE();
     }
 }

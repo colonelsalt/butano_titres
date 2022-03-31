@@ -15,5 +15,6 @@ static constexpr int z_index = 6;
 Tetramino spawn_next();
 
 void init_bgs();
+void update_level(int new_level);
 
 extern const bn::sprite_item tetramino_sprite_items[num_tetraminos];

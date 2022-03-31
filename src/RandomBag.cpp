@@ -271,6 +271,7 @@ bn::optional<bn::sprite_ptr> preview_sprite;
 
 bn::random random = bn::random();
 int curr_turn = 0;
+int curr_level = 1;
 
 void shuffle_bag(bn::array<int, num_tetraminos>& bag)
 {
@@ -290,6 +291,11 @@ void init_bgs()
 {
     tetramino_bg = bn::unique_ptr<DynamicBG>(new DynamicBG());
     ghost_piece_bg = bn::unique_ptr<DynamicBG>(new DynamicBG());
+}
+
+void update_level(int new_level)
+{
+    curr_level = new_level;
 }
 
 Tetramino spawn_next()
@@ -312,5 +318,5 @@ Tetramino spawn_next()
     int next_turn_index = tetramino_index_bag[curr_turn];
     preview_sprite = tetramino_sprite_items[next_turn_index].create_sprite(80, -60);
 
-    return Tetramino(col_grids, tetramino_bg.get(), ghost_piece_bg.get(), wall_kicks_list, index);
+    return Tetramino(col_grids, tetramino_bg.get(), ghost_piece_bg.get(), wall_kicks_list, curr_level, index);
 }

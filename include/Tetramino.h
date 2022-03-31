@@ -26,8 +26,8 @@ class Tetramino
         
         // Position of the top left corner of this tetramino's grid in the BG grid
         bn::point _grid_pos;
-        int _num_ticks_between_moves;
-        int _tick_count;
+        bn::fixed _num_ticks_between_moves;
+        bn::fixed _tick_count;
         bn::size _size;
         bool _has_collided;
         int _input_repeat_rate;
@@ -44,7 +44,7 @@ class Tetramino
 
     public:
         Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetramino_bg, DynamicBG* ghost_piece_bg,
-                t_wall_kick_list wall_kicks_list, int tile_index);
+                t_wall_kick_list wall_kicks_list, int tile_index, int level);
         void update();
         void hide();
         bool has_collided();
