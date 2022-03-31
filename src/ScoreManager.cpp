@@ -4,6 +4,7 @@
 #include <bn_string_view.h>
 #include <bn_format.h>
 #include <bn_sprite_ptr.h>
+#include <bn_log.h>
 #include "common_variable_8x16_sprite_font.h"
 #include "RandomBag.h"
 
@@ -38,10 +39,10 @@ void update_score_text()
 
 void check_for_level_increase()
 {
+    BN_LOG("Checking level... current level: ", level, "; lines: ", lines);
     if (lines % 10 == 0 && lines > 0 && level < 19)
     {
         level++;
-        update_score_text();
         update_level(level);
     }
 }
@@ -82,8 +83,12 @@ void increment_score_line_clear(int num_line_clears)
     default:
         break;
     }
-    lines += num_line_clears;
-    check_for_level_increase();
+    for (int i = 0; i < num_line_clears; i++)
+    {
+        lines++;
+        check_for_level_increase();
+    }
+        
     update_score_text();
 }
 

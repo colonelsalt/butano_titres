@@ -271,7 +271,7 @@ bn::optional<bn::sprite_ptr> preview_sprite;
 
 bn::random random = bn::random();
 int curr_turn = 0;
-int curr_level = 13;
+int curr_level = 1;
 
 void shuffle_bag(bn::array<int, num_tetraminos>& bag)
 {

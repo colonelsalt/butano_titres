@@ -9,9 +9,13 @@
 
 bn::array<bn::array<bool, GRID_WIDTH>, GRID_HEIGHT> bg_grid; 
 bn::unique_ptr<DynamicBG> grid_ptr;
+bool is_game_over;
+int end_animation_row = 19;
 
 void reset_grid()
 {
+    is_game_over = false;
+    end_animation_row = 19;
     grid_ptr = bn::unique_ptr<DynamicBG>(new DynamicBG());
     grid_ptr->set_visible(true);
     grid_ptr->set_priority(3);
@@ -50,7 +54,12 @@ void add_to_grid(Tetramino& tetramino)
             {
                 int x = tetramino.grid_pos().x() + j;
                 int y = tetramino.grid_pos().y() + i;
-                if (x < 0 || x > GRID_WIDTH - 1 || y < 0 || y > GRID_HEIGHT - 1)
+                if (y < 0)
+                {
+                    is_game_over = true;
+                    return;
+                }
+                if (x < 0 || x > GRID_WIDTH - 1 || y > GRID_HEIGHT - 1)
                     continue;
                 //BN_LOG("Adding cell to grid at x = ", x, ", y = ", y, " with tile index: ", tetramino.index() + 1);
                 bg_grid[y][x] = true;
@@ -90,8 +99,7 @@ bool check_for_line_clear()
 
 void shift_down(int start_line, int num_lines)
 {
-    BN_LOG("Shifting lines from ", start_line, " and up by ", num_lines);
-
+    //BN_LOG("Shifting lines from ", start_line, " and up by ", num_lines);
     for (int i = start_line; i >= 0; i--)
     {
         for (int j = 0; j < GRID_WIDTH; j++)

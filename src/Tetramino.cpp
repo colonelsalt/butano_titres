@@ -26,6 +26,7 @@ Tetramino::Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetram
 
     _ticks_before_lock_down = 30;
     _lock_down_ticks = 0;
+    _is_locking_down = false;
 
     _bg->clear();
     _bg->set_priority(2);
@@ -40,8 +41,8 @@ void Tetramino::update()
 {
     handle_input();
     _tick_count += 1;
-    BN_LOG("Tick count is ", _tick_count);
-    if (_tick_count >= _num_ticks_between_moves)
+    //BN_LOG("Tick count is ", _tick_count);
+    if (_tick_count >= _num_ticks_between_moves || _is_locking_down)
     {
         _tick_count = 0;
         move_down(false);
@@ -89,8 +90,10 @@ void Tetramino::move_down(bool soft_drop)
 {
     if (did_collide(bn::point(_grid_pos.x(), _grid_pos.y() + 1), _active_col_grid))
     {
+        _is_locking_down = true;
         _lock_down_ticks++;
-        if (_lock_down_ticks >= _ticks_before_lock_down)
+        if (_lock_down_ticks >= _ticks_before_lock_down || bn::keypad::down_pressed()
+            || (bn::keypad::down_held() && _input_repeat_count == 0))
             commit_to_grid();
         //BN_LOG("Tetramino collided; index: ", _index);
     }
@@ -98,6 +101,7 @@ void Tetramino::move_down(bool soft_drop)
     {
         if (soft_drop)
             _soft_drop_cells++;
+        _is_locking_down = false;
         _lock_down_ticks = 0;
         _grid_pos.set_y(_grid_pos.y() + 1);
         _ghost_piece.update_pos(_grid_pos, _active_col_grid);

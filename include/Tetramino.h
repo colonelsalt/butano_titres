@@ -26,6 +26,7 @@ class Tetramino
 
         int _ticks_before_lock_down;
         int _lock_down_ticks;
+        bool _is_locking_down;
         
         // Position of the top left corner of this tetramino's grid in the BG grid
         bn::point _grid_pos;
