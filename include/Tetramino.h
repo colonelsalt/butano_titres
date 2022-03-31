@@ -23,6 +23,9 @@ class Tetramino
 
         int _soft_drop_cells;
         int _hard_drop_cells;
+
+        int _ticks_before_lock_down;
+        int _lock_down_ticks;
         
         // Position of the top left corner of this tetramino's grid in the BG grid
         bn::point _grid_pos;

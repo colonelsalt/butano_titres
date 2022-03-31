@@ -24,6 +24,9 @@ Tetramino::Tetramino(bn::array<t_col_grid, 4> collision_grids, DynamicBG* tetram
     _soft_drop_cells = 0;
     _hard_drop_cells = 0;
 
+    _ticks_before_lock_down = 30;
+    _lock_down_ticks = 0;
+
     _bg->clear();
     _bg->set_priority(2);
     _bg->set_visible(true);
@@ -86,13 +89,16 @@ void Tetramino::move_down(bool soft_drop)
 {
     if (did_collide(bn::point(_grid_pos.x(), _grid_pos.y() + 1), _active_col_grid))
     {
-        commit_to_grid();
+        _lock_down_ticks++;
+        if (_lock_down_ticks >= _ticks_before_lock_down)
+            commit_to_grid();
         //BN_LOG("Tetramino collided; index: ", _index);
     }
     else
     {
         if (soft_drop)
             _soft_drop_cells++;
+        _lock_down_ticks = 0;
         _grid_pos.set_y(_grid_pos.y() + 1);
         _ghost_piece.update_pos(_grid_pos, _active_col_grid);
     }
